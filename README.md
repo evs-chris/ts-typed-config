@@ -64,7 +64,7 @@ const handle = readConfig({
       console.error(f.errors.map(e => {
         return `${e.type}: ${e.file} - ${e.message
         }\n ${e.line}| ${e.text
-        }\n ${Array.apply(Array, new Array(e.line.toString().length + e.char)).map(_ => ' ').join('')} ^`;
+        }\n ${Array.apply(Array, new Array(e.line.toString().length + e.col)).map(_ => ' ').join('')} ^`;
       }).join('\n'));
       
       // and bail

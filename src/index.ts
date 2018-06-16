@@ -27,7 +27,7 @@ export interface Config<T> {
 export interface TSError {
   file: string;
   line: number;
-  char: number;
+  col: number;
   message: string;
   type: string;
   text: string;
@@ -175,7 +175,7 @@ function transform(name: string, contents: string, localTS: string, compilerOpti
       return {
         file: e.file.fileName,
         line: pos.line + 1,
-        char: pos.character + 1,
+        col: pos.character + 1,
         message: e.messageText.toString(),
         text: e.file.getText().substring(starts[pos.line], starts[pos.line + 1] - 1),
         type: ts.DiagnosticCategory[e.category]
