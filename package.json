@@ -1,0 +1,33 @@
+{
+  "name": "@evs-chris/ts-typed-config",
+  "version": "0.0.1",
+  "main": "build/index.js",
+  "typings": "build/index.d.ts",
+  "description": "Read typed custom config files written in typescript because reasons",
+  "homepage": "https://github.com/evs-chris/ts-typed-config",
+  "bugs": "https://github.com/evs-chris/ts-typed-config/issues",
+  "license": "MIT",
+  "files": [
+    "build/index.js",
+    "build/index.d.ts",
+    "README.md"
+  ],
+  "author": {
+    "name": "Chris Reeves"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/evs-chris/ts-typed-config.git"
+  },
+  "dependencies": {
+    "import-cwd": "^2"
+  },
+  "peerDependencies": {
+    "@types/node": ">= 8",
+    "typescript": ">= 1.6"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  }
+}
