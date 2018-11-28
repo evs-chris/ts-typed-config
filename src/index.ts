@@ -57,23 +57,26 @@ export function config<T>(options: InitOptions<T> | ReloadOptions<T>): Config<T>
     let input = fs.readFileSync(file, { encoding: 'utf8' }).replace(/\$CONFIG/g, mod);
     if (!~input.indexOf(mod)) input += `\nimport { Config } from '${mod}';`
     input += `\ndeclare global { const config: Config; }`;
-
-    const output = transform(file, input, localTS, {
-      module: ts.ModuleKind.CommonJS,
-      moduleResolution: ts.ModuleResolutionKind.NodeJs,
-      lib: [ 'node', 'es2017' ],
-      target: ts.ScriptTarget.ES2017
-    });
-    if (output.errors.length) {
-      if (options.result) options.result({ name: file, exists: true, loaded: false, errors: output.errors });
-    } else {
-      const text: string = output.outputs.find(o => o.name.replace(/\.js$/, '.ts') === file).text;
-      try {
-        (new Function('exports', 'require', '__filename', '__dirname', 'config', text))({}, requireCwd, path.resolve(file), path.dirname(path.resolve(file)), config);
-        if (options.result) options.result({ name: file, exists: true, loaded: true, errors: [] });
-      } catch (e) {
-        if (options.result) options.result({ name: file, exists: true, loaded: false, exception: e.message, errors: [] })
+    try {
+      const output = transform(file, input, localTS, {
+        module: ts.ModuleKind.CommonJS,
+        moduleResolution: ts.ModuleResolutionKind.NodeJs,
+        lib: [ 'node', 'es2017' ],
+        target: ts.ScriptTarget.ES2017
+      });
+      if (output.errors.length) {
+        if (options.result) options.result({ name: file, exists: true, loaded: false, errors: output.errors });
+      } else {
+        const text: string = output.outputs.find(o => o.name.replace(/\.js$/, '.ts') === file).text;
+        try {
+          (new Function('exports', 'require', '__filename', '__dirname', 'config', text))({}, requireCwd, path.resolve(file), path.dirname(path.resolve(file)), config);
+          if (options.result) options.result({ name: file, exists: true, loaded: true, errors: [] });
+        } catch (e) {
+          if (options.result) options.result({ name: file, exists: true, loaded: false, exception: e.message, errors: [] });
+        }
       }
+    } catch (e) {
+      if (options.result) options.result({ name: file, exists: true, loaded: false, exception: e.message, errors: [] });
     }
   }
 
